@@ -1,7 +1,9 @@
 eclipse.preferences.version=1
+encoding//src/main/webapp/admin/dashboard.jsp=UTF-8
 encoding//src/main/webapp/admin/reports.jsp=UTF-8
 encoding//src/main/webapp/admin/reservation-create.jsp=UTF-8
 encoding//src/main/webapp/admin/reservations.jsp=UTF-8
 encoding//src/main/webapp/admin/room-types.jsp=UTF-8
+encoding//src/main/webapp/view/register.jsp=UTF-8
 encoding//src/main/webapp/view/reservation-create.jsp=UTF-8
 encoding/<project>=UTF-8
