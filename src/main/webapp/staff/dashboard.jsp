@@ -127,7 +127,9 @@ iframe{ width:100%; height:100%; border:none; background:white; }
 
         <div class="nav">
             <a href="<%= request.getContextPath() %>/reservations/create" target="contentFrame">Create Reservation</a>
-            <a href="<%= request.getContextPath() %>/staff/reservations" target="contentFrame">All Reservations</a>
+          <a href="<%= request.getContextPath() %>/admin/reservations" target="contentFrame">
+   All Reservations
+</a>
         </div>
 
         <div class="divider"></div>

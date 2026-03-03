@@ -91,11 +91,12 @@ public class CreateReservationServlet extends HttpServlet {
             return;
         }
 
-        // redirect to correct dashboard by role
+     // redirect after success (✅ DO NOT redirect to dashboard.jsp)
         if ("ADMIN".equalsIgnoreCase(u.getRole())) {
-            response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp");
+            response.sendRedirect(request.getContextPath() + "/admin/reservations");
         } else {
-            response.sendRedirect(request.getContextPath() + "/staff/dashboard.jsp");
+            // receptionist / staff
+            response.sendRedirect(request.getContextPath() + "/admin/reservations");
         }
     }
 }
