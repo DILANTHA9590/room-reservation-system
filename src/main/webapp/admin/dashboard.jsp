@@ -14,28 +14,89 @@ if (!"ADMIN".equalsIgnoreCase(u.getRole())) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Dashboard</title>
+<title>Admin Dashboard</title>
+
+<style>
+body { margin:0; font-family:Arial; }
+
+.container {
+    display:flex;
+    height:100vh;
+}
+
+.sidebar {
+    width:220px;
+    background:#2c3e50;
+    color:white;
+    padding:20px;
+}
+
+.sidebar h3 {
+    margin-top:0;
+}
+
+.sidebar a {
+    display:block;
+    padding:10px;
+    color:white;
+    text-decoration:none;
+}
+
+.sidebar a:hover {
+    background:#34495e;
+}
+
+.content {
+    flex:1;
+}
+
+iframe {
+    width:100%;
+    height:100%;
+    border:none;
+}
+</style>
+
 </head>
 <body>
 
-<h2>Ocean View Resort - ADMIN Dashboard</h2>
-<p>Welcome <b><%= u.getFullName() %></b> | Role: <b><%= u.getRole() %></b></p>
+<div class="container">
 
-<hr>
+    <div class="sidebar">
+        <h3>ADMIN PANEL</h3>
 
-<h3>Admin Functions</h3>
-<ul>
-    <li><a href="#">Manage Room Types / Categories</a></li>
-    <li><a href="#">Manage Staff Users</a></li>
-    <li><a href="#">View / Cancel All Reservations</a></li>
-    <li><a href="#">Reports</a></li>
-</ul>
+        <p>Welcome <%= u.getFullName() %></p>
+        <hr>
 
-<hr>
+        <a href="<%= request.getContextPath() %>/admin/room-types" target="contentFrame">
+            Manage Room Types
+        </a>
 
-<form action="<%= request.getContextPath() %>/logout" method="post">
-    <button type="submit">Logout</button>
-</form>
+        <a href="<%= request.getContextPath() %>/admin/users" target="contentFrame">
+            Manage Staff Users
+        </a>
+
+        <a href="<%= request.getContextPath() %>/admin/reservations" target="contentFrame">
+            All Reservations
+        </a>
+
+        <a href="<%= request.getContextPath() %>/admin/reports" target="contentFrame">
+            Reports
+        </a>
+
+        <hr>
+
+        <form action="<%= request.getContextPath() %>/logout" method="post">
+            <button type="submit">Logout</button>
+        </form>
+
+    </div>
+
+    <div class="content">
+        <iframe name="contentFrame"></iframe>
+    </div>
+
+</div>
 
 </body>
 </html>
