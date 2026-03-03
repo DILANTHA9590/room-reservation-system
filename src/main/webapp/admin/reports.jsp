@@ -1,15 +1,39 @@
 <%@ page import="model.User" %>
 <%
 User u = (User) session.getAttribute("loggedUser");
-if (u == null) { response.sendRedirect(request.getContextPath()+"/view/login.jsp"); return; }
-if (!"ADMIN".equalsIgnoreCase(u.getRole())) { out.print("403 - ADMIN only"); return; }
+if (u == null) { 
+    response.sendRedirect(request.getContextPath()+"/view/login.jsp"); 
+    return; 
+}
 
-int totalRoomTypes = (Integer) request.getAttribute("totalRoomTypes");
-int totalUsers = (Integer) request.getAttribute("totalUsers");
-int totalReservations = (Integer) request.getAttribute("totalReservations");
-int cancelledReservations = (Integer) request.getAttribute("cancelledReservations");
-int totalPayments = (Integer) request.getAttribute("totalPayments");
-double totalRevenue = (Double) request.getAttribute("totalRevenue");
+// ✅ allow ADMIN + RECEPTIONIST
+String role = u.getRole();
+
+boolean isAdmin = "ADMIN".equalsIgnoreCase(role);
+boolean isReceptionist = "RECEPTIONIST".equalsIgnoreCase(role);
+System.out.print(role);
+if (!isAdmin && !isReceptionist) { 
+    out.print("403 - Access Denied"); 
+    return; 
+}
+
+// ✅ safe casting (avoid null pointer)
+Integer totalRoomTypesObj = (Integer) request.getAttribute("totalRoomTypes");
+Integer totalUsersObj = (Integer) request.getAttribute("totalUsers");
+Integer totalReservationsObj = (Integer) request.getAttribute("totalReservations");
+Integer cancelledReservationsObj = (Integer) request.getAttribute("cancelledReservations");
+Integer totalPaymentsObj = (Integer) request.getAttribute("totalPayments");
+Double totalRevenueObj = (Double) request.getAttribute("totalRevenue");
+
+int totalRoomTypes = totalRoomTypesObj != null ? totalRoomTypesObj : 0;
+int totalUsers = totalUsersObj != null ? totalUsersObj : 0;
+int totalReservations = totalReservationsObj != null ? totalReservationsObj : 0;
+int cancelledReservations = cancelledReservationsObj != null ? cancelledReservationsObj : 0;
+int totalPayments = totalPaymentsObj != null ? totalPaymentsObj : 0;
+double totalRevenue = totalRevenueObj != null ? totalRevenueObj : 0.0;
+
+// ✅ back link by role
+String backUrl = request.getContextPath() + (isAdmin ? "/admin/dashboard.jsp" : "/staff/dashboard.jsp");
 %>
 
 <!DOCTYPE html>
@@ -30,7 +54,7 @@ a.back{display:inline-block;margin:10px 0;text-decoration:none;color:#2c3e50;fon
 <body>
 
 <h2>Reports</h2>
-<a class="back" href="<%= request.getContextPath() %>/admin/dashboard.jsp">⬅ Back to Dashboard</a>
+<a class="back" href="<%= backUrl %>">⬅ Back to Dashboard</a>
 
 <div class="grid">
   <div class="card">
