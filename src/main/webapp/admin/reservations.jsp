@@ -3,14 +3,18 @@
 <%@ page import="model.User" %>
 
 <%
-User admin = (User) session.getAttribute("loggedUser");
-if (admin == null) { 
-    response.sendRedirect(request.getContextPath()+"/view/login.jsp"); 
-    return; 
+User user = (User) session.getAttribute("loggedUser");
+if (user == null) {
+    response.sendRedirect(request.getContextPath()+"/view/login.jsp");
+    return;
 }
-if (!"ADMIN".equalsIgnoreCase(admin.getRole())) { 
-    out.print("403 - ADMIN only"); 
-    return; 
+
+boolean isAdmin = "ADMIN".equalsIgnoreCase(user.getRole());
+boolean isReceptionist = "RECEPTIONIST".equalsIgnoreCase(user.getRole()); // staff role eka me name eka neda?
+
+if (!isAdmin && !isReceptionist) {
+    out.print("403 - Access Denied");
+    return;
 }
 
 List<Reservation> reservations = (List<Reservation>) request.getAttribute("reservations");
@@ -48,7 +52,11 @@ a.back { text-decoration:none; color:#2c3e50; font-weight:bold; }
 
 <div class="topbar">
   <h2>All Reservations</h2>
-  <a class="back" href="<%= request.getContextPath() %>/admin/dashboard.jsp">⬅ Back to Dashboard</a>
+
+  <a class="back"
+     href="<%= request.getContextPath() %>/<%= isAdmin ? "admin/dashboard.jsp" : "staff/dashboard.jsp" %>">
+     ⬅ Back to Dashboard
+  </a>
 </div>
 
 <div class="card">
@@ -70,7 +78,7 @@ a.back { text-decoration:none; color:#2c3e50; font-weight:bold; }
     if (reservations != null && !reservations.isEmpty()) {
         for (Reservation r : reservations) {
             boolean cancelled = "CANCELLED".equalsIgnoreCase(r.getStatus());
-            boolean paid = r.isPaid(); // ✅ make sure Reservation model has isPaid()
+            boolean paid = r.isPaid();
     %>
     <tr>
         <td><%= r.getReservationId() %></td>
@@ -88,7 +96,6 @@ a.back { text-decoration:none; color:#2c3e50; font-weight:bold; }
             </span>
         </td>
 
-        <!-- ✅ Payment status -->
         <td>
             <% if (paid) { %>
                 <span class="badge paid">PAID</span>
@@ -97,23 +104,27 @@ a.back { text-decoration:none; color:#2c3e50; font-weight:bold; }
             <% } %>
         </td>
 
-        <!-- ✅ Action logic -->
         <td>
-            <% if (cancelled) { %>
-                -
-            <% } else if (paid) { %>
+            <% if (cancelled || paid) { %>
                 -
             <% } else { %>
+
+                <!-- Pay: Admin + Receptionist both allowed -->
                 <a class="btn pay"
                    href="<%= request.getContextPath() %>/payments/create?id=<%= r.getReservationId() %>">
                    Pay
                 </a>
-                &nbsp;
-                <a class="btn cancel"
-                   href="<%= request.getContextPath() %>/admin/reservations?cancel=<%= r.getReservationId() %>"
-                   onclick="return confirm('Cancel this reservation?');">
-                   Cancel
-                </a>
+
+                <!-- Cancel: ADMIN only -->
+                <% if (isAdmin) { %>
+                    &nbsp;
+                    <a class="btn cancel"
+                       href="<%= request.getContextPath() %>/admin/reservations?cancel=<%= r.getReservationId() %>"
+                       onclick="return confirm('Cancel this reservation?');">
+                       Cancel
+                    </a>
+                <% } %>
+
             <% } %>
         </td>
     </tr>
