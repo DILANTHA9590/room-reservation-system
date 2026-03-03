@@ -24,7 +24,7 @@
 </form>
 
 <p style="color:red;">${error}</p>
-<a href="login.jsp">Back to Login</a>
+<a href="<%= request.getContextPath() %>/view/login.jsp">Back to Login</a>
 
 </body>
 </html>

@@ -16,6 +16,6 @@
 <p style="color:red;">
     ${error}
 </p>
-
+<a href="<%= request.getContextPath() %>/view/register.jsp">Create Account</a>
 </body>
 </html>
