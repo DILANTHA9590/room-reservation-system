@@ -17,20 +17,31 @@ public class AdminReservationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // security check
+        // ✅ security check
         User u = (User) request.getSession().getAttribute("loggedUser");
         if (u == null) {
             response.sendRedirect(request.getContextPath() + "/view/login.jsp");
             return;
         }
-        if (!"ADMIN".equalsIgnoreCase(u.getRole())) {
-            response.getWriter().print("403 - ADMIN only");
+
+        // ✅ allow ADMIN + RECEPTIONIST
+        String role = u.getRole();
+        boolean isAdmin = "ADMIN".equalsIgnoreCase(role);
+        boolean isReceptionist = "RECEPTIONIST".equalsIgnoreCase(role);
+
+        if (!isAdmin && !isReceptionist) {
+            response.getWriter().print("403 - Access Denied");
             return;
         }
 
-        // cancel action
+        // ✅ cancel action (ADMIN only)
         String cancelId = request.getParameter("cancel");
         if (cancelId != null) {
+            if (!isAdmin) {
+                response.getWriter().print("403 - Only ADMIN can cancel reservations");
+                return;
+            }
+
             dao.cancelReservation(Integer.parseInt(cancelId));
             response.sendRedirect(request.getContextPath() + "/admin/reservations");
             return;
