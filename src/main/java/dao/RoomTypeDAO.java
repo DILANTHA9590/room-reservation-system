@@ -11,9 +11,9 @@ import java.util.List;
 
 public class RoomTypeDAO {
 
-    public List<RoomType> getAll() {
+    public List<RoomType> getAllRoomTypes() {
         List<RoomType> list = new ArrayList<>();
-        String sql = "SELECT * FROM room_types ORDER BY id DESC";
+        String sql = "SELECT id, name, rate_per_night FROM room_types ORDER BY id DESC";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -26,20 +26,21 @@ public class RoomTypeDAO {
                 rt.setRatePerNight(rs.getDouble("rate_per_night"));
                 list.add(rt);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
     }
 
-    public boolean add(RoomType rt) {
-        String sql = "INSERT INTO room_types (name, rate_per_night) VALUES (?, ?)";
+    public boolean addRoomType(String name, double ratePerNight) {
+        String sql = "INSERT INTO room_types(name, rate_per_night) VALUES (?, ?)";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, rt.getName());
-            ps.setDouble(2, rt.getRatePerNight());
+            ps.setString(1, name);
+            ps.setDouble(2, ratePerNight);
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -48,7 +49,7 @@ public class RoomTypeDAO {
         return false;
     }
 
-    public boolean deleteById(int id) {
+    public boolean deleteRoomType(int id) {
         String sql = "DELETE FROM room_types WHERE id = ?";
 
         try (Connection con = DBConnection.getConnection();

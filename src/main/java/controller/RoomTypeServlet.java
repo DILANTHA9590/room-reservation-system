@@ -1,13 +1,12 @@
 package controller;
 
 import dao.RoomTypeDAO;
-import model.RoomType;
+import model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet("/admin/room-types")
 public class RoomTypeServlet extends HttpServlet {
@@ -18,33 +17,56 @@ public class RoomTypeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // delete action: /admin/room-types?delete=ID
-        String deleteId = request.getParameter("delete");
-        if (deleteId != null) {
-            dao.deleteById(Integer.parseInt(deleteId));
+        // security
+        User u = (User) request.getSession().getAttribute("loggedUser");
+        if (u == null) {
+            response.sendRedirect(request.getContextPath() + "/view/login.jsp");
+            return;
+        }
+        if (!"ADMIN".equalsIgnoreCase(u.getRole())) {
+            response.getWriter().print("403 - ADMIN only");
+            return;
+        }
+
+        // delete action
+        String del = request.getParameter("delete");
+        if (del != null) {
+            int id = Integer.parseInt(del);
+            dao.deleteRoomType(id);
             response.sendRedirect(request.getContextPath() + "/admin/room-types");
             return;
         }
 
-        List<RoomType> roomTypes = dao.getAll();
-        request.setAttribute("roomTypes", roomTypes);
+        request.setAttribute("roomTypes", dao.getAllRoomTypes());
         request.getRequestDispatcher("/admin/room-types.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+            throws ServletException, IOException {
+
+        User u = (User) request.getSession().getAttribute("loggedUser");
+        if (u == null) {
+            response.sendRedirect(request.getContextPath() + "/view/login.jsp");
+            return;
+        }
+        if (!"ADMIN".equalsIgnoreCase(u.getRole())) {
+            response.getWriter().print("403 - ADMIN only");
+            return;
+        }
 
         String name = request.getParameter("name");
         String rateStr = request.getParameter("rate");
 
+        if (name == null || name.trim().isEmpty() || rateStr == null || rateStr.trim().isEmpty()) {
+            request.setAttribute("error", "Name and rate are required.");
+            request.setAttribute("roomTypes", dao.getAllRoomTypes());
+            request.getRequestDispatcher("/admin/room-types.jsp").forward(request, response);
+            return;
+        }
+
         double rate = Double.parseDouble(rateStr);
-
-        RoomType rt = new RoomType();
-        rt.setName(name);
-        rt.setRatePerNight(rate);
-
-        dao.add(rt);
+        dao.addRoomType(name.trim(), rate);
 
         response.sendRedirect(request.getContextPath() + "/admin/room-types");
     }
