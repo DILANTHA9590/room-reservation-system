@@ -1,47 +1,31 @@
 package model;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class Reservation {
 
-    private int id;
+    private int reservationId;
     private String reservationNo;
     private String guestName;
     private String address;
-    private String contactNumber;
+    private String contactNo;
 
     private LocalDate checkIn;
     private LocalDate checkOut;
 
     private String status;
 
-    // 🔗 Relationship
-    private RoomType roomType;        // Many reservations → one room type
-    private List<Payment> payments;   // One reservation → many payments
+    private boolean paid;  //add  check paid 
+
+    // for displaying join result (room type name)
+    private String roomTypeName;
+
+    private int roomTypeId;
 
     public Reservation() {}
 
-    public Reservation(int id, String reservationNo, String guestName,
-                       String address, String contactNumber,
-                       LocalDate checkIn, LocalDate checkOut,
-                       String status, RoomType roomType) {
-
-        this.id = id;
-        this.reservationNo = reservationNo;
-        this.guestName = guestName;
-        this.address = address;
-        this.contactNumber = contactNumber;
-        this.checkIn = checkIn;
-        this.checkOut = checkOut;
-        this.status = status;
-        this.roomType = roomType;
-    }
-
-    // Getters & Setters
-
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getReservationId() { return reservationId; }
+    public void setReservationId(int reservationId) { this.reservationId = reservationId; }
 
     public String getReservationNo() { return reservationNo; }
     public void setReservationNo(String reservationNo) { this.reservationNo = reservationNo; }
@@ -52,8 +36,8 @@ public class Reservation {
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
 
-    public String getContactNumber() { return contactNumber; }
-    public void setContactNumber(String contactNumber) { this.contactNumber = contactNumber; }
+    public String getContactNo() { return contactNo; }
+    public void setContactNo(String contactNo) { this.contactNo = contactNo; }
 
     public LocalDate getCheckIn() { return checkIn; }
     public void setCheckIn(LocalDate checkIn) { this.checkIn = checkIn; }
@@ -64,9 +48,13 @@ public class Reservation {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
-    public RoomType getRoomType() { return roomType; }
-    public void setRoomType(RoomType roomType) { this.roomType = roomType; }
+    // ✅ NEW
+    public boolean isPaid() { return paid; }
+    public void setPaid(boolean paid) { this.paid = paid; }
 
-    public List<Payment> getPayments() { return payments; }
-    public void setPayments(List<Payment> payments) { this.payments = payments; }
+    public String getRoomTypeName() { return roomTypeName; }
+    public void setRoomTypeName(String roomTypeName) { this.roomTypeName = roomTypeName; }
+
+    public int getRoomTypeId() { return roomTypeId; }
+    public void setRoomTypeId(int roomTypeId) { this.roomTypeId = roomTypeId; }
 }

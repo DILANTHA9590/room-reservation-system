@@ -8,7 +8,7 @@ public class DBConnection {
 
     private static final String URL = "jdbc:mysql://localhost:3306/room_reservation_db";
     private static final String USER = "root";
-    private static final String PASSWORD = "xxxxx@75";
+    private static final String PASSWORD = "Sql@3751";
 
     public static Connection getConnection() {
         try {
