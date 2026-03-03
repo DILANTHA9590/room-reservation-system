@@ -28,11 +28,18 @@ table { width:100%; border-collapse:collapse; border-radius:8px; overflow:hidden
 th { background:#2c3e50; color:#fff; padding:12px; }
 td { padding:10px; text-align:center; }
 tr:nth-child(even) { background:#f2f2f2; }
-a.btn { padding:6px 10px; background:#e74c3c; color:#fff; text-decoration:none; border-radius:5px; }
-a.btn:hover { background:#c0392b; }
-.badge { padding:4px 8px; border-radius:10px; color:#fff; font-size:12px; }
+
+a.btn { padding:6px 10px; color:#fff; text-decoration:none; border-radius:5px; display:inline-block; }
+a.btn:hover { opacity:0.9; }
+
+a.cancel { background:#e74c3c; }
+a.pay { background:#2980b9; }
+
+.badge { padding:4px 8px; border-radius:10px; color:#fff; font-size:12px; display:inline-block; }
 .badge.cancelled { background:#7f8c8d; }
 .badge.active { background:#27ae60; }
+.badge.paid { background:#16a085; }
+
 .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; }
 a.back { text-decoration:none; color:#2c3e50; font-weight:bold; }
 </style>
@@ -55,6 +62,7 @@ a.back { text-decoration:none; color:#2c3e50; font-weight:bold; }
         <th>Check-in</th>
         <th>Check-out</th>
         <th>Status</th>
+        <th>Payment</th>
         <th>Action</th>
     </tr>
 
@@ -62,6 +70,7 @@ a.back { text-decoration:none; color:#2c3e50; font-weight:bold; }
     if (reservations != null && !reservations.isEmpty()) {
         for (Reservation r : reservations) {
             boolean cancelled = "CANCELLED".equalsIgnoreCase(r.getStatus());
+            boolean paid = r.isPaid(); // ✅ make sure Reservation model has isPaid()
     %>
     <tr>
         <td><%= r.getReservationId() %></td>
@@ -70,7 +79,6 @@ a.back { text-decoration:none; color:#2c3e50; font-weight:bold; }
         <td><%= r.getContactNo() %></td>
         <td><%= r.getRoomTypeName() %></td>
 
-        <!-- ✅ LocalDate safe printing -->
         <td><%= r.getCheckIn() != null ? r.getCheckIn().toString() : "" %></td>
         <td><%= r.getCheckOut() != null ? r.getCheckOut().toString() : "" %></td>
 
@@ -79,24 +87,42 @@ a.back { text-decoration:none; color:#2c3e50; font-weight:bold; }
                 <%= r.getStatus() %>
             </span>
         </td>
+
+        <!-- ✅ Payment status -->
         <td>
-            <% if (!cancelled) { %>
-                <a class="btn"
+            <% if (paid) { %>
+                <span class="badge paid">PAID</span>
+            <% } else { %>
+                <span class="badge cancelled">UNPAID</span>
+            <% } %>
+        </td>
+
+        <!-- ✅ Action logic -->
+        <td>
+            <% if (cancelled) { %>
+                -
+            <% } else if (paid) { %>
+                -
+            <% } else { %>
+                <a class="btn pay"
+                   href="<%= request.getContextPath() %>/payments/create?id=<%= r.getReservationId() %>">
+                   Pay
+                </a>
+                &nbsp;
+                <a class="btn cancel"
                    href="<%= request.getContextPath() %>/admin/reservations?cancel=<%= r.getReservationId() %>"
                    onclick="return confirm('Cancel this reservation?');">
                    Cancel
                 </a>
-            <% } else { %>
-                -
             <% } %>
         </td>
     </tr>
-    <% 
-        } 
-    } else { 
+    <%
+        }
+    } else {
     %>
     <tr>
-        <td colspan="9">No reservations found.</td>
+        <td colspan="10">No reservations found.</td>
     </tr>
     <% } %>
 
