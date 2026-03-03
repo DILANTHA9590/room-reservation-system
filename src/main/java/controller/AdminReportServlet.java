@@ -13,17 +13,20 @@ public class AdminReportServlet extends HttpServlet {
 
     private final ReportDAO dao = new ReportDAO();
 
+    private boolean allowed(User u){
+        if(u == null) return false;
+        String role = u.getRole();
+        return "ADMIN".equalsIgnoreCase(role) || "RECEPTIONIST".equalsIgnoreCase(role);
+      
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         User u = (User) request.getSession().getAttribute("loggedUser");
-        if (u == null) {
-            response.sendRedirect(request.getContextPath() + "/view/login.jsp");
-            return;
-        }
-        if (!"ADMIN".equalsIgnoreCase(u.getRole())) {
-            response.getWriter().print("403 - ADMIN only");
+        if (!allowed(u)) {
+            response.getWriter().print("403 - Access Denied");
             return;
         }
 
@@ -32,7 +35,6 @@ public class AdminReportServlet extends HttpServlet {
         request.setAttribute("totalReservations", dao.totalReservations());
         request.setAttribute("cancelledReservations", dao.cancelledReservations());
 
-     // Handle exception safely in case the payments table is not available in the database
         try {
             request.setAttribute("totalPayments", dao.totalPayments());
             request.setAttribute("totalRevenue", dao.totalRevenue());
