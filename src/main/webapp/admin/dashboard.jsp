@@ -17,43 +17,171 @@ if (!"ADMIN".equalsIgnoreCase(u.getRole())) {
 <title>Admin Dashboard</title>
 
 <style>
-body { margin:0; font-family:Arial; }
+:root{
+    --bg: #0f172a;
+    --sidebar: #111827;
+    --sidebar2:#0b1220;
+    --text: #e5e7eb;
+    --muted:#9ca3af;
+    --brand:#38bdf8;
+    --brand2:#60a5fa;
+    --border: rgba(255,255,255,0.08);
+}
 
-.container {
+*{ box-sizing:border-box; }
+
+body{
+    margin:0;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    background: radial-gradient(1200px 600px at 20% 0%, rgba(56,189,248,0.18), transparent 60%),
+                radial-gradient(900px 500px at 80% 20%, rgba(96,165,250,0.14), transparent 55%),
+                var(--bg);
+    color: var(--text);
+}
+
+.container{
     display:flex;
     height:100vh;
+    overflow:hidden;
 }
 
-.sidebar {
-    width:220px;
-    background:#2c3e50;
-    color:white;
-    padding:20px;
+/* Sidebar */
+.sidebar{
+    width:260px;
+    padding:18px;
+    background: linear-gradient(180deg, var(--sidebar), var(--sidebar2));
+    border-right: 1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    gap:14px;
 }
 
-.sidebar h3 {
-    margin-top:0;
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    border-radius:12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
 }
 
-.sidebar a {
-    display:block;
-    padding:10px;
-    color:white;
+.logo{
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    box-shadow: 0 12px 25px rgba(56,189,248,0.18);
+}
+
+.brand h3{
+    margin:0;
+    font-size:14px;
+    letter-spacing:0.8px;
+    text-transform:uppercase;
+    color: var(--text);
+}
+
+.userbox{
+    padding:12px;
+    border-radius:12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+}
+
+.userbox .welcome{
+    font-size:12px;
+    color: var(--muted);
+    margin-bottom:6px;
+}
+
+.userbox .name{
+    font-weight:700;
+    font-size:14px;
+    color: var(--text);
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.sidebar a{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 12px;
+    border-radius:12px;
+    color: var(--text);
     text-decoration:none;
+    border: 1px solid transparent;
+    background: transparent;
+    transition: 0.25s;
+    font-size:14px;
 }
 
-.sidebar a:hover {
-    background:#34495e;
+.sidebar a:hover{
+    background: rgba(56,189,248,0.08);
+    border-color: rgba(56,189,248,0.18);
+    transform: translateX(2px);
 }
 
-.content {
+.sidebar a span.hint{
+    font-size:12px;
+    color: var(--muted);
+}
+
+.divider{
+    height:1px;
+    background: var(--border);
+    margin:6px 0;
+}
+
+/* Logout */
+.logoutForm{
+    margin-top:auto;
+    padding-top:10px;
+}
+
+.logoutBtn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:700;
+    color:#0b1220;
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    transition: 0.25s;
+}
+
+.logoutBtn:hover{
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+}
+
+/* Content */
+.content{
     flex:1;
+    padding:16px;
 }
 
-iframe {
+.frameWrap{
+    width:100%;
+    height:100%;
+    border-radius:16px;
+    overflow:hidden;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.35);
+}
+
+iframe{
     width:100%;
     height:100%;
     border:none;
+    background:white;
 }
 </style>
 
@@ -63,41 +191,57 @@ iframe {
 <div class="container">
 
     <div class="sidebar">
-        <h3>ADMIN PANEL</h3>
 
-        <p>Welcome <%= u.getFullName() %></p>
-        <hr>
+        <div class="brand">
+            <div class="logo"></div>
+            <h3>Admin Panel</h3>
+        </div>
 
-        <a href="<%= request.getContextPath() %>/admin/room-types" target="contentFrame">
-            Manage Room Types
-        </a>
+        <div class="userbox">
+            <div class="welcome">Welcome</div>
+            <div class="name"><%= u.getFullName() %></div>
+        </div>
 
-        <a href="<%= request.getContextPath() %>/admin/users" target="contentFrame">
-            Manage Staff Users
-        </a>
+        <div class="nav">
+            <a href="<%= request.getContextPath() %>/admin/room-types" target="contentFrame">
+                Manage Room Types <span class="hint"></span>
+            </a>
 
-        <a href="<%= request.getContextPath() %>/admin/reservations" target="contentFrame">
-            All Reservations
-        </a>
+            <a href="<%= request.getContextPath() %>/admin/users" target="contentFrame">
+                Manage Staff Users <span class="hint"></span>
+            </a>
 
-        <a href="<%= request.getContextPath() %>/admin/reports" target="contentFrame">
-            Reports
-        </a>
-        <a href="<%= request.getContextPath() %>/reservations/create">Create Reservation</a>
-        <a href="<%= request.getContextPath() %>/admin/reports">Reports</a>
+            <a href="<%= request.getContextPath() %>/admin/reservations" target="contentFrame">
+                All Reservations <span class="hint"></span>
+            </a>
 
-        <hr>
+            <a href="<%= request.getContextPath() %>/reservations/create" target="contentFrame">
+                Create Reservation <span class="hint"></span>
+            </a>
 
-        <form action="<%= request.getContextPath() %>/logout" method="post">
-            <button type="submit">Logout</button>
+            <a href="<%= request.getContextPath() %>/admin/reports" target="contentFrame">
+                Reports <span class="hint"></span>
+            </a>
+        </div>
+
+        <div class="divider"></div>
+
+        <form class="logoutForm" action="<%= request.getContextPath() %>/logout" method="post">
+            <button class="logoutBtn" type="submit">Logout</button>
         </form>
-        
-        
 
     </div>
 
     <div class="content">
-        <iframe name="contentFrame"></iframe>
+        <div class="frameWrap">
+
+            <!-- ✅ Default load Reports after login -->
+            <iframe
+                name="contentFrame"
+                src="<%= request.getContextPath() %>/admin/reports">
+            </iframe>
+
+        </div>
     </div>
 
 </div>
