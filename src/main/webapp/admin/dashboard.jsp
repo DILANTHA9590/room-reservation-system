@@ -84,12 +84,15 @@ iframe {
             Reports
         </a>
         <a href="<%= request.getContextPath() %>/reservations/create">Create Reservation</a>
+        <a href="<%= request.getContextPath() %>/admin/reports">Reports</a>
 
         <hr>
 
         <form action="<%= request.getContextPath() %>/logout" method="post">
             <button type="submit">Logout</button>
         </form>
+        
+        
 
     </div>
 
