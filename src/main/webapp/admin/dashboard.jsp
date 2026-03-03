@@ -83,6 +83,7 @@ iframe {
         <a href="<%= request.getContextPath() %>/admin/reports" target="contentFrame">
             Reports
         </a>
+        <a href="<%= request.getContextPath() %>/reservations/create">Create Reservation</a>
 
         <hr>
 
