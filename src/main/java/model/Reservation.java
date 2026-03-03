@@ -15,15 +15,15 @@ public class Reservation {
 
     private String status;
 
+    private boolean paid;  //add  check paid 
+
     // for displaying join result (room type name)
     private String roomTypeName;
 
-    // keep relationship (optional)
-    private int roomTypeId; // easier for DB usage
+    private int roomTypeId;
 
     public Reservation() {}
 
-    // getters & setters
     public int getReservationId() { return reservationId; }
     public void setReservationId(int reservationId) { this.reservationId = reservationId; }
 
@@ -47,6 +47,10 @@ public class Reservation {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    // ✅ NEW
+    public boolean isPaid() { return paid; }
+    public void setPaid(boolean paid) { this.paid = paid; }
 
     public String getRoomTypeName() { return roomTypeName; }
     public void setRoomTypeName(String roomTypeName) { this.roomTypeName = roomTypeName; }
