@@ -98,9 +98,7 @@ a.delete-btn:hover {
 <body>
 
 <h2>Manage Room Types</h2>
-<a class="back-link" href="<%= request.getContextPath() %>/admin/dashboard.jsp">
-⬅ Back to Dashboard
-</a>
+
 
 <div class="card">
     <h3>Add New Room Type</h3>
