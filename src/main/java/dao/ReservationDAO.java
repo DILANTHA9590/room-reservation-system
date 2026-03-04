@@ -166,4 +166,23 @@ public class ReservationDAO {
 
         return null;
     }
+    
+    
+    
+    public boolean deleteReservation(int id) {
+
+        String sql = "DELETE FROM reservations WHERE id = ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }

@@ -50,4 +50,44 @@ public class AdminReservationServlet extends HttpServlet {
         request.setAttribute("reservations", dao.getAllReservations());
         request.getRequestDispatcher("/admin/reservations.jsp").forward(request, response);
     }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // ✅ security check
+        User u = (User) request.getSession().getAttribute("loggedUser");
+        if (u == null) {
+            response.sendRedirect(request.getContextPath() + "/view/login.jsp");
+            return;
+        }
+
+        // ✅ ADMIN only for POST actions (delete)
+        boolean isAdmin = "ADMIN".equalsIgnoreCase(u.getRole());
+        if (!isAdmin) {
+            response.getWriter().print("403 - Only ADMIN can delete reservations");
+            return;
+        }
+
+        String action = request.getParameter("action");
+        if ("delete".equalsIgnoreCase(action)) {
+            String idStr = request.getParameter("id");
+
+            try {
+                int id = Integer.parseInt(idStr);
+
+                // Optional safety: paid reservations delete block
+                // Reservation r = dao.getReservationById(id);
+                // if (r != null && r.isPaid()) { response.getWriter().print("Cannot delete paid reservation"); return; }
+
+                dao.deleteReservation(id);
+
+            } catch (NumberFormatException ex) {
+                response.getWriter().print("Invalid reservation id");
+                return;
+            }
+        }
+
+        response.sendRedirect(request.getContextPath() + "/admin/reservations");
+    }
 }

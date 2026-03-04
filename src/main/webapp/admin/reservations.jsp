@@ -27,6 +27,7 @@ List<Reservation> reservations = (List<Reservation>) request.getAttribute("reser
 <meta charset="UTF-8">
 
 <style>
+
 body{
  font-family:Arial;
  background:#f4f6f9;
@@ -71,10 +72,12 @@ tr:hover{
 }
 
 /* Buttons */
-a.btn{
+
+a.btn, button.btn{
  padding:7px 12px;
  color:#fff;
  text-decoration:none;
+ border:none;
  border-radius:8px;
  font-size:13px;
  font-weight:600;
@@ -84,16 +87,12 @@ a.btn{
  gap:6px;
  transition:0.2s ease;
  box-shadow:0 2px 6px rgba(0,0,0,0.12);
+ cursor:pointer;
 }
 
-a.btn:hover{
+a.btn:hover, button.btn:hover{
  transform:translateY(-1px);
  opacity:.95;
-}
-
-a.btn:active{
- transform:translateY(0px);
- box-shadow:none;
 }
 
 .pay{ background:#2980b9; }
@@ -108,6 +107,9 @@ a.btn:active{
 .bill{ background:#27ae60; }
 .bill:hover{ background:#2ecc71; }
 
+.delete{ background:#c0392b; }
+.delete:hover{ background:#a93226; }
+
 .actions{
  display:flex;
  justify-content:center;
@@ -116,6 +118,7 @@ a.btn:active{
 }
 
 /* badges */
+
 .badge{
  padding:4px 10px;
  border-radius:20px;
@@ -137,104 +140,134 @@ a.btn:active{
  margin-bottom:15px;
 }
 
-a.back{
- text-decoration:none;
- color:#2c3e50;
- font-weight:bold;
-}
 </style>
 </head>
 
 <body>
 
 <div class="topbar">
-  <h2>All Reservations</h2>
+<h2>All Reservations</h2>
 </div>
 
 <div class="card">
+
 <table>
 
 <tr>
-  <th>ID</th>
-  <th>Reservation No</th>
-  <th>Guest Name</th>
-  <th>Contact</th>
-  <th>Room Type</th>
-  <th>Check-in</th>
-  <th>Check-out</th>
-  <th>Status</th>
-  <th>Payment</th>
-  <th>Action</th>
+<th>ID</th>
+<th>Reservation No</th>
+<th>Guest Name</th>
+<th>Contact</th>
+<th>Room Type</th>
+<th>Check-in</th>
+<th>Check-out</th>
+<th>Status</th>
+<th>Payment</th>
+<th>Action</th>
 </tr>
 
 <%
 if (reservations != null && !reservations.isEmpty()) {
-    for (Reservation r : reservations) {
-        boolean cancelled = "CANCELLED".equalsIgnoreCase(r.getStatus());
-        boolean paid = r.isPaid();
+
+for (Reservation r : reservations) {
+
+boolean cancelled = "CANCELLED".equalsIgnoreCase(r.getStatus());
+boolean paid = r.isPaid();
 %>
 
 <tr>
-  <td><%= r.getReservationId() %></td>
-  <td><%= r.getReservationNo() %></td>
-  <td><%= r.getGuestName() %></td>
-  <td><%= r.getContactNo() %></td>
-  <td><%= r.getRoomTypeName() %></td>
-  <td><%= r.getCheckIn() != null ? r.getCheckIn().toString() : "" %></td>
-  <td><%= r.getCheckOut() != null ? r.getCheckOut().toString() : "" %></td>
 
-  <td>
-    <span class="badge <%= cancelled ? "cancelled" : "active" %>">
-      <%= r.getStatus() %>
-    </span>
-  </td>
+<td><%= r.getReservationId() %></td>
+<td><%= r.getReservationNo() %></td>
+<td><%= r.getGuestName() %></td>
+<td><%= r.getContactNo() %></td>
+<td><%= r.getRoomTypeName() %></td>
 
-  <td>
-    <% if (paid) { %>
-      <span class="badge paid">PAID</span>
-    <% } else { %>
-      <span class="badge unpaid">UNPAID</span>
-    <% } %>
-  </td>
+<td><%= r.getCheckIn() != null ? r.getCheckIn().toString() : "" %></td>
+<td><%= r.getCheckOut() != null ? r.getCheckOut().toString() : "" %></td>
 
-  <td class="actions">
-    <% if (!cancelled && !paid) { %>
+<td>
+<span class="badge <%= cancelled ? "cancelled" : "active" %>">
+<%= r.getStatus() %>
+</span>
+</td>
 
-      <a class="btn pay"
-         href="<%= request.getContextPath() %>/payments/create?id=<%= r.getReservationId() %>">
-          Pay
-      </a>
+<td>
 
-      <% if (isAdmin) { %>
-        <a class="btn cancel"
-           href="<%= request.getContextPath() %>/admin/reservations?cancel=<%= r.getReservationId() %>"
-           onclick="return confirm('Cancel this reservation?');">
-           Cancel
-        </a>
-      <% } %>
+<% if (paid) { %>
 
-    <% } %>
+<span class="badge paid">PAID</span>
 
-    <a class="btn edit"
-       href="<%= request.getContextPath() %>/reservations/edit?id=<%= r.getReservationId() %>">
-       Edit
-    </a>
+<% } else { %>
 
-    <!-- ✅ Enhanced Bill Button -->
-    <a class="btn bill"
-       href="<%= request.getContextPath() %>/bill?reservationId=<%= r.getReservationId() %>">
-        Bill
-    </a>
-  </td>
+<span class="badge unpaid">UNPAID</span>
+
+<% } %>
+
+</td>
+
+<td class="actions">
+
+<% if (!cancelled && !paid) { %>
+
+<a class="btn pay"
+href="<%= request.getContextPath() %>/payments/create?id=<%= r.getReservationId() %>">
+Pay
+</a>
+
+<% if (isAdmin) { %>
+
+<a class="btn cancel"
+href="<%= request.getContextPath() %>/admin/reservations?cancel=<%= r.getReservationId() %>"
+onclick="return confirm('Cancel this reservation?');">
+Cancel
+</a>
+
+<% } %>
+
+<% } %>
+
+<a class="btn edit"
+href="<%= request.getContextPath() %>/reservations/edit?id=<%= r.getReservationId() %>">
+Edit
+</a>
+
+<a class="btn bill"
+href="<%=request.getContextPath()%>/bill?reservationId=<%= r.getReservationId() %>">
+Bill
+</a>
+
+<% if (isAdmin) { %>
+
+<form action="<%= request.getContextPath() %>/admin/reservations"
+method="post"
+style="display:inline;">
+
+<input type="hidden" name="action" value="delete">
+<input type="hidden" name="id" value="<%= r.getReservationId() %>">
+
+<button type="submit"
+class="btn delete"
+onclick="return confirm('Delete this reservation permanently?');">
+Delete
+</button>
+
+</form>
+
+<% } %>
+
+</td>
+
 </tr>
 
 <%
-    }
-} else {
+}
+}
+else{
 %>
 
 <tr>
-  <td colspan="10">No reservations found.</td>
+<td colspan="10">No reservations found.</td>
 </tr>
 
 <%
@@ -242,6 +275,7 @@ if (reservations != null && !reservations.isEmpty()) {
 %>
 
 </table>
+
 </div>
 
 </body>
