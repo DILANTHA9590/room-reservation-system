@@ -129,9 +129,6 @@ font-size:12px;
 
 <div class="topbar">
 
-<a class="back" href="<%= backUrl %>">
-⬅ Back to Dashboard
-</a>
 
 </div>
 
