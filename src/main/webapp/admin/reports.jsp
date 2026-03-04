@@ -159,13 +159,13 @@ font-size:12px;
 <div class="card">
 <div class="label">Total Payments</div>
 <div class="value"><%= totalPayments %></div>
-<div class="small">(If payments table exists)</div>
+
 </div>
 
 <div class="card">
 <div class="label">Total Revenue</div>
 <div class="value"><%= String.format("%.2f", totalRevenue) %></div>
-<div class="small">(If payments table exists)</div>
+
 </div>
 
 </div>
