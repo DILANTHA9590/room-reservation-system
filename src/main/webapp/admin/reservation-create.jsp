@@ -41,7 +41,7 @@ a.back { text-decoration:none; color:#2c3e50; font-weight:bold; }
 
 <div class="topbar">
   <h2>All Reservations</h2>
-  <a class="back" href="<%= request.getContextPath() %>/admin/dashboard.jsp">⬅ Back to Dashboard</a>
+
 </div>
 
 <div class="card">
