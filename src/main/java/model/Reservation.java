@@ -23,6 +23,9 @@ public class Reservation {
     private int roomTypeId;
 
     public Reservation() {}
+    
+    private double ratePerNight;
+    
 
     public int getReservationId() { return reservationId; }
     public void setReservationId(int reservationId) { this.reservationId = reservationId; }
@@ -57,4 +60,12 @@ public class Reservation {
 
     public int getRoomTypeId() { return roomTypeId; }
     public void setRoomTypeId(int roomTypeId) { this.roomTypeId = roomTypeId; }
+    
+    public double getRatePerNight() {
+        return ratePerNight;
+    }
+
+    public void setRatePerNight(double ratePerNight) {
+        this.ratePerNight = ratePerNight;
+    }
 }
