@@ -13,10 +13,13 @@ public class RegisterServlet extends HttpServlet {
 
     // simple admin key (change this)
     private static final String ADMIN_KEY = "ADMIN123";
+    
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    
             throws ServletException, IOException {
+    	
 
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
