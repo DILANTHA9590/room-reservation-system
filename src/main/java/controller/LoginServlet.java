@@ -26,14 +26,17 @@ public class LoginServlet extends HttpServlet {
             request.getRequestDispatcher("view/login.jsp").forward(request, response);
             return;
         }
+
         HttpSession session = request.getSession();
         session.setAttribute("loggedUser", user);
+
+        // ✅ success message
+        session.setAttribute("loginSuccess", "Login Successful");
 
         if ("ADMIN".equalsIgnoreCase(user.getRole())) {
             response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp");
         } else {
             response.sendRedirect(request.getContextPath() + "/staff/dashboard.jsp");
         }
-       
     }
 }

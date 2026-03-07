@@ -5,18 +5,23 @@ if (u == null) {
     response.sendRedirect(request.getContextPath() + "/view/login.jsp");
     return;
 }
+
 if (!"ADMIN".equalsIgnoreCase(u.getRole())) {
     out.print("403 - Access Denied (ADMIN only)");
     return;
 }
+
+String loginSuccess = (String) session.getAttribute("loginSuccess");
 %>
 
 <!DOCTYPE html>
 <html>
 <head>
 <title>Admin Dashboard</title>
-
+<link rel="icon" type="image/png"
+href="<%=request.getContextPath()%>/assets/images/favicon.png">
 <style>
+
 :root{
     --bg: #0f172a;
     --sidebar: #111827;
@@ -28,29 +33,38 @@ if (!"ADMIN".equalsIgnoreCase(u.getRole())) {
     --border: rgba(255,255,255,0.08);
 }
 
-*{ box-sizing:border-box; }
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
-    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-    background: radial-gradient(1200px 600px at 20% 0%, rgba(56,189,248,0.18), transparent 60%),
-                radial-gradient(900px 500px at 80% 20%, rgba(96,165,250,0.14), transparent 55%),
-                var(--bg);
-    color: var(--text);
+    font-family:"Segoe UI", Tahoma, Arial, sans-serif;
+
+    background:
+    radial-gradient(1200px 600px at 20% 0%, rgba(56,189,248,0.18), transparent 60%),
+    radial-gradient(900px 500px at 80% 20%, rgba(96,165,250,0.14), transparent 55%),
+    var(--bg);
+
+    color:var(--text);
 }
+
+/* Layout */
 
 .container{
     display:flex;
     height:100vh;
-    overflow:hidden;
 }
 
 /* Sidebar */
+
 .sidebar{
     width:260px;
     padding:18px;
-    background: linear-gradient(180deg, var(--sidebar), var(--sidebar2));
-    border-right: 1px solid var(--border);
+
+    background:linear-gradient(180deg,var(--sidebar),var(--sidebar2));
+    border-right:1px solid var(--border);
+
     display:flex;
     flex-direction:column;
     gap:14px;
@@ -62,43 +76,35 @@ body{
     gap:10px;
     padding:10px 12px;
     border-radius:12px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
+    background:rgba(255,255,255,0.04);
 }
 
 .logo{
     width:34px;
     height:34px;
     border-radius:10px;
-    background: linear-gradient(135deg, var(--brand), var(--brand2));
-    box-shadow: 0 12px 25px rgba(56,189,248,0.18);
+    background:linear-gradient(135deg,var(--brand),var(--brand2));
 }
 
 .brand h3{
     margin:0;
     font-size:14px;
-    letter-spacing:0.8px;
     text-transform:uppercase;
-    color: var(--text);
 }
 
 .userbox{
     padding:12px;
     border-radius:12px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
+    background:rgba(255,255,255,0.04);
 }
 
 .userbox .welcome{
     font-size:12px;
-    color: var(--muted);
-    margin-bottom:6px;
+    color:var(--muted);
 }
 
 .userbox .name{
     font-weight:700;
-    font-size:14px;
-    color: var(--text);
 }
 
 .nav{
@@ -108,63 +114,35 @@ body{
 }
 
 .sidebar a{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:12px 12px;
-    border-radius:12px;
-    color: var(--text);
+    padding:12px;
+    border-radius:10px;
+    color:var(--text);
     text-decoration:none;
-    border: 1px solid transparent;
-    background: transparent;
-    transition: 0.25s;
-    font-size:14px;
 }
 
 .sidebar a:hover{
-    background: rgba(56,189,248,0.08);
-    border-color: rgba(56,189,248,0.18);
-    transform: translateX(2px);
+    background:rgba(56,189,248,0.15);
 }
 
-.sidebar a span.hint{
-    font-size:12px;
-    color: var(--muted);
-}
-
-.divider{
-    height:1px;
-    background: var(--border);
-    margin:6px 0;
-}
-
-/* Logout */
 .logoutForm{
     margin-top:auto;
-    padding-top:10px;
 }
 
 .logoutBtn{
     width:100%;
     padding:12px;
     border:none;
-    border-radius:12px;
+    border-radius:10px;
+    font-weight:bold;
     cursor:pointer;
-    font-weight:700;
-    color:#0b1220;
-    background: linear-gradient(135deg, var(--brand), var(--brand2));
-    transition: 0.25s;
-}
-
-.logoutBtn:hover{
-    filter: brightness(1.05);
-    transform: translateY(-1px);
+    background:linear-gradient(135deg,var(--brand),var(--brand2));
 }
 
 /* Content */
+
 .content{
     flex:1;
-    padding:16px;
+    padding:20px;
 }
 
 .frameWrap{
@@ -172,9 +150,7 @@ body{
     height:100%;
     border-radius:16px;
     overflow:hidden;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,0.03);
-    box-shadow: 0 20px 45px rgba(0,0,0,0.35);
+    border:1px solid var(--border);
 }
 
 iframe{
@@ -183,68 +159,106 @@ iframe{
     border:none;
     background:white;
 }
+
+/* Toast Notification */
+
+.toast{
+position:fixed;
+top:20px;
+right:20px;
+background:#27ae60;
+color:white;
+padding:14px 20px;
+border-radius:8px;
+font-weight:600;
+box-shadow:0 5px 20px rgba(0,0,0,0.3);
+z-index:9999;
+}
+
 </style>
 
 </head>
+
 <body>
+
+<% if(loginSuccess != null){ %>
+<div class="toast">
+<%= loginSuccess %>
+</div>
+<%
+session.removeAttribute("loginSuccess");
+}
+%>
 
 <div class="container">
 
-    <div class="sidebar">
+<div class="sidebar">
 
-        <div class="brand">
-            <div class="logo"></div>
-            <h3>Admin Panel</h3>
-        </div>
+<div class="brand">
+<div class="logo"></div>
+<h3>Ocean View Resort</h3>
+</div>
 
-        <div class="userbox">
-            <div class="welcome">Welcome</div>
-            <div class="name"><%= u.getFullName() %></div>
-        </div>
+<div class="userbox">
+<div class="welcome">Welcome</div>
+<div class="name"><%= u.getFullName() %></div>
+</div>
 
-        <div class="nav">
-            <a href="<%= request.getContextPath() %>/admin/room-types" target="contentFrame">
-                Manage Room Types <span class="hint"></span>
-            </a>
+<div class="nav">
 
-            <a href="<%= request.getContextPath() %>/admin/users" target="contentFrame">
-                Manage Staff Users <span class="hint"></span>
-            </a>
+<a href="<%= request.getContextPath() %>/admin/reports" target="contentFrame">
+Reports
+</a>
 
-            <a href="<%= request.getContextPath() %>/admin/reservations" target="contentFrame">
-                All Reservations <span class="hint"></span>
-            </a>
+<a href="<%= request.getContextPath() %>/admin/room-types" target="contentFrame">
+Manage Room Types
+</a>
 
-            <a href="<%= request.getContextPath() %>/reservations/create" target="contentFrame">
-                Create Reservation <span class="hint"></span>
-            </a>
+<a href="<%= request.getContextPath() %>/admin/users" target="contentFrame">
+Manage Staff Users
+</a>
 
-            <a href="<%= request.getContextPath() %>/admin/reports" target="contentFrame">
-                Reports <span class="hint"></span>
-            </a>
-        </div>
+<a href="<%= request.getContextPath() %>/admin/reservations" target="contentFrame">
+All Reservations
+</a>
 
-        <div class="divider"></div>
-
-        <form class="logoutForm" action="<%= request.getContextPath() %>/logout" method="post">
-            <button class="logoutBtn" type="submit">Logout</button>
-        </form>
-
-    </div>
-
-    <div class="content">
-        <div class="frameWrap">
-
-            <!-- ✅ Default load Reports after login -->
-            <iframe
-                name="contentFrame"
-                src="<%= request.getContextPath() %>/admin/reports">
-            </iframe>
-
-        </div>
-    </div>
+<a href="<%= request.getContextPath() %>/reservations/create" target="contentFrame">
+Create Reservation
+</a>
 
 </div>
+
+<form class="logoutForm" action="<%= request.getContextPath() %>/logout" method="post">
+<button class="logoutBtn">Logout</button>
+</form>
+
+</div>
+
+<div class="content">
+
+<div class="frameWrap">
+
+<iframe
+name="contentFrame"
+src="<%= request.getContextPath() %>/admin/reports">
+</iframe>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+setTimeout(function(){
+ const toast = document.querySelector(".toast");
+ if(toast){
+  toast.style.display="none";
+ }
+},3000);
+
+</script>
 
 </body>
 </html>

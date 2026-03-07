@@ -16,129 +16,189 @@ List<RoomType> roomTypes = (List<RoomType>) request.getAttribute("roomTypes");
 <title>Manage Room Types</title>
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f9;
-    margin: 20px;
+
+body{
+font-family:'Segoe UI', Arial;
+background:#f4f6f9;
+margin:25px;
 }
 
-h2 {
-    color: #2c3e50;
+h2{
+color:#2c3e50;
+margin-bottom:20px;
 }
 
-.card {
-    background: white;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+/* Cards */
+
+.card{
+background:white;
+padding:25px;
+margin-bottom:25px;
+
+border-radius:10px;
+
+box-shadow:0 4px 15px rgba(0,0,0,0.08);
 }
 
-input {
-    padding: 8px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.card h3{
+margin-top:0;
+margin-bottom:15px;
+color:#34495e;
 }
 
-button {
-    padding: 8px 15px;
-    background-color: #2c3e50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+/* Form inputs */
+
+input{
+padding:10px 12px;
+margin-right:10px;
+
+border:1px solid #ccc;
+border-radius:6px;
+
+font-size:14px;
 }
 
-button:hover {
-    background-color: #34495e;
+input:focus{
+border-color:#2c3e50;
+outline:none;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
+/* Button */
+
+button{
+padding:10px 18px;
+
+background:#2c3e50;
+color:white;
+
+border:none;
+border-radius:6px;
+
+font-weight:600;
+cursor:pointer;
+
+transition:0.2s;
 }
 
-th {
-    background-color: #2c3e50;
-    color: white;
-    padding: 12px;
+button:hover{
+background:#34495e;
 }
 
-td {
-    padding: 10px;
-    text-align: center;
+/* Table */
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+
+border-radius:8px;
+overflow:hidden;
 }
 
-tr:nth-child(even) {
-    background-color: #f2f2f2;
+th{
+background:#2c3e50;
+color:white;
+
+padding:14px;
+
+font-size:14px;
 }
 
-a.delete-btn {
-    color: red;
-    text-decoration: none;
-    font-weight: bold;
+td{
+padding:12px;
+text-align:center;
+
+font-size:14px;
 }
 
-a.delete-btn:hover {
-    text-decoration: underline;
+/* zebra rows */
+
+tr:nth-child(even){
+background:#f7f9fb;
 }
 
-.back-link {
-    text-decoration: none;
-    color: #2c3e50;
-    font-weight: bold;
+/* row hover */
+
+tr:hover{
+background:#eef3f8;
 }
+
+/* delete button */
+
+a.delete-btn{
+color:#e74c3c;
+text-decoration:none;
+font-weight:600;
+}
+
+a.delete-btn:hover{
+text-decoration:underline;
+}
+
 </style>
 
 </head>
+
 <body>
 
 <h2>Manage Room Types</h2>
 
-
 <div class="card">
-    <h3>Add New Room Type</h3>
-    <form action="<%= request.getContextPath() %>/admin/room-types" method="post">
-        <input type="text" name="name" placeholder="Room Type Name" required />
-        <input type="number" step="0.01" name="rate" placeholder="Rate Per Night" required />
-        <button type="submit">Add</button>
-    </form>
+
+<h3>Add New Room Type</h3>
+
+<form action="<%= request.getContextPath() %>/admin/room-types" method="post">
+
+<input type="text" name="name" placeholder="Room Type Name" required />
+
+<input type="number" step="0.01" name="rate" placeholder="Rate Per Night" required />
+
+<button type="submit">Add</button>
+
+</form>
+
 </div>
 
 <div class="card">
-    <h3>Room Types List</h3>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Rate Per Night</th>
-            <th>Action</th>
-        </tr>
+<h3>Room Types List</h3>
 
-        <%
-        if (roomTypes != null) {
-            for (RoomType rt : roomTypes) {
-        %>
-        <tr>
-            <td><%= rt.getId() %></td>
-            <td><%= rt.getName() %></td>
-            <td>Rs. <%= rt.getRatePerNight() %></td>
-            <td>
-                <a class="delete-btn"
-                   href="<%= request.getContextPath() %>/admin/room-types?delete=<%= rt.getId() %>"
-                   onclick="return confirm('Delete this room type?');">
-                   Delete
-                </a>
-            </td>
-        </tr>
-        <% } } %>
+<table>
 
-    </table>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Rate Per Night</th>
+<th>Action</th>
+</tr>
+
+<%
+if (roomTypes != null) {
+for (RoomType rt : roomTypes) {
+%>
+
+<tr>
+
+<td><%= rt.getId() %></td>
+
+<td><%= rt.getName() %></td>
+
+<td>Rs. <%= rt.getRatePerNight() %></td>
+
+<td>
+<a class="delete-btn"
+href="<%= request.getContextPath() %>/admin/room-types?delete=<%= rt.getId() %>"
+onclick="return confirm('Delete this room type?');">
+Delete
+</a>
+</td>
+
+</tr>
+
+<% } } %>
+
+</table>
+
 </div>
 
 </body>

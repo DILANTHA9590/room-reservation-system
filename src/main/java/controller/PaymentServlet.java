@@ -68,7 +68,7 @@ public class PaymentServlet extends HttpServlet {
         if ("ADMIN".equalsIgnoreCase(u.getRole())) {
             response.sendRedirect(request.getContextPath() + "/admin/reservations");
         } else {
-            response.sendRedirect(request.getContextPath() + "/staff/reservations");
+            response.sendRedirect(request.getContextPath() + "/admin/reservations");
         }
     }
 }

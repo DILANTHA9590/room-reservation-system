@@ -7,7 +7,6 @@ if (u == null) {
     return; 
 }
 
-// allow ADMIN + RECEPTIONIST
 String role = u.getRole();
 
 boolean isAdmin = "ADMIN".equalsIgnoreCase(role);
@@ -18,7 +17,6 @@ if (!isAdmin && !isReceptionist) {
     return; 
 }
 
-// safe casting
 Integer totalRoomTypesObj = (Integer) request.getAttribute("totalRoomTypes");
 Integer totalUsersObj = (Integer) request.getAttribute("totalUsers");
 Integer totalReservationsObj = (Integer) request.getAttribute("totalReservations");
@@ -32,15 +30,11 @@ int totalReservations = totalReservationsObj != null ? totalReservationsObj : 0;
 int cancelledReservations = cancelledReservationsObj != null ? cancelledReservationsObj : 0;
 int totalPayments = totalPaymentsObj != null ? totalPaymentsObj : 0;
 double totalRevenue = totalRevenueObj != null ? totalRevenueObj : 0.0;
-
-// back link
-String backUrl = request.getContextPath() + (isAdmin ? "/admin/dashboard.jsp" : "/staff/dashboard.jsp");
 %>
 
 <!DOCTYPE html>
 <html>
 <head>
-
 <title>Reports</title>
 
 <style>
@@ -48,77 +42,58 @@ String backUrl = request.getContextPath() + (isAdmin ? "/admin/dashboard.jsp" : 
 body{
 font-family:Arial;
 background:#f4f6f9;
-margin:20px;
+margin:30px;
 }
 
-/* top bar */
-
-.topbar{
-display:flex;
-align-items:center;
-margin-bottom:20px;
-}
-
-a.back{
-display:inline-flex;
-align-items:center;
-gap:6px;
-text-decoration:none;
-color:#2c3e50;
-font-weight:bold;
-font-size:14px;
-padding:6px 12px;
-border-radius:6px;
-background:#eef2f6;
-}
-
-a.back:hover{
-background:#dde3ea;
-}
+/* title */
 
 h2{
 color:#2c3e50;
-margin-bottom:15px;
+margin-bottom:25px;
+font-size:26px;
 }
 
 /* grid layout */
 
 .grid{
 display:grid;
-grid-template-columns:repeat(3, minmax(200px, 1fr));
-gap:15px;
+grid-template-columns:repeat(3, 1fr);
+gap:25px;
 }
 
 /* cards */
 
 .card{
 background:#fff;
-border-radius:10px;
-padding:18px;
-box-shadow:0 2px 8px rgba(0,0,0,0.08);
+border-radius:12px;
+padding:35px;
+
+box-shadow:0 4px 15px rgba(0,0,0,0.08);
+
 transition:0.2s;
 }
 
 .card:hover{
-transform:translateY(-2px);
+transform:translateY(-4px);
+box-shadow:0 8px 20px rgba(0,0,0,0.12);
 }
 
 .label{
 color:#7f8c8d;
-font-size:13px;
-margin-bottom:6px;
+font-size:16px;
+margin-bottom:10px;
 }
 
 .value{
-font-size:28px;
+font-size:40px;
 font-weight:bold;
 color:#2c3e50;
 }
 
 .small{
-margin-top:8px;
+margin-top:10px;
 color:#95a5a6;
-font-size:12px;
+font-size:13px;
 }
 
 </style>
@@ -126,11 +101,6 @@ font-size:12px;
 </head>
 
 <body>
-
-<div class="topbar">
-
-
-</div>
 
 <h2>Reports</h2>
 
@@ -159,13 +129,11 @@ font-size:12px;
 <div class="card">
 <div class="label">Total Payments</div>
 <div class="value"><%= totalPayments %></div>
-
 </div>
 
 <div class="card">
 <div class="label">Total Revenue</div>
 <div class="value"><%= String.format("%.2f", totalRevenue) %></div>
-
 </div>
 
 </div>
